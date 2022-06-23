@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PostComp from "./PostComp";
-import { fetchPosts, allPosts, error, status } from "./PostSlice";
+import {
+  fetchPosts,
+  addPost,
+  addEmoji,
+  allPosts,
+  error,
+  status,
+} from "./PostSlice";
 
 const PostList = () => {
   const [title, setTitle] = useState("");
@@ -15,6 +22,7 @@ const PostList = () => {
 
   const handlePost = (e) => {
     e.preventDefault();
+    dispatch(addPost(title, content));
 
     setTitle("");
     setContent("");
@@ -32,11 +40,9 @@ const PostList = () => {
   } else if (postStatus === "FulFilled") {
     const post = posts;
     if (post.length !== 0) {
-      data =
-        post &&
-        post.map((ele) => {
-          return <PostComp key={ele.id} post={ele} />;
-        });
+      data = post.map((ele) => {
+        return <PostComp key={ele.id} post={ele} />;
+      });
     } else {
       data = "";
       return data;

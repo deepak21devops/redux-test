@@ -14,18 +14,20 @@ const PostComp = ({ post }) => {
     return (
       <button
         key={name}
+        type="button"
+        className="reactionButton"
         onClick={() =>
           dispatch(addEmoji({ postId: post.id, reaction: name, post }))
         }
       >
-        {emoji} : {post.templates[name]}
+        {emoji} {post.templates[name]}
       </button>
     );
   });
   return (
     <div style={{ marginBottom: "50px" }}>
       <h2>{post.title}</h2>
-      <p>{post.body.substring(0, 100)}</p>
+      <p>{post.body}</p>
       <p>{post.date}</p>
       {options}
     </div>

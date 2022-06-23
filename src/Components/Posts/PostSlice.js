@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, nanoid } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -20,10 +20,30 @@ const PostSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
+    addPost: {
+      reducer(state, action) {
+        state.posts.push(action.payload);
+      },
+      prepare(title, content) {
+        return {
+          payload: {
+            id: nanoid(),
+            title,
+            body: content,
+
+            templates: {
+              like: 0,
+              share: 0,
+              subscribe: 1,
+            },
+          },
+        };
+      },
+    },
     addEmoji: (state, action) => {
       const { postId, reaction, post } = action.payload;
-
-      console.log(state.posts.posts);
+      console.log(postId, reaction, post);
+      state.posts = post.templates[reaction]++;
     },
   },
   extraReducers(builder) {
@@ -36,7 +56,7 @@ const PostSlice = createSlice({
         pst.templates = {
           like: 0,
           share: 0,
-          subscribe: 0,
+          subscribe: 1,
         };
         return pst;
       });
@@ -61,6 +81,6 @@ export const allPosts = (state) => state.posts.posts;
 export const error = (state) => state.posts.error;
 export const status = (state) => state.posts.status;
 
-export const { addEmoji } = PostSlice.actions;
+export const { addEmoji, addPost } = PostSlice.actions;
 
 export default PostSlice.reducer;
